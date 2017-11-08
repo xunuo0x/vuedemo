@@ -48,10 +48,12 @@ const hotMiddleware = require('webpack-hot-middleware')(compiler, {
 app.use(hotMiddleware)
 
 // proxy api requests
-Object.keys(proxyTable).forEach(function (context) {
+Object.keys(proxyTable).forEach(function(context) {
   let options = proxyTable[context]
   if (typeof options === 'string') {
-    options = { target: options }
+    options = {
+      target: options
+    }
   }
   app.use(proxyMiddleware(options.filter || context, options))
 })
@@ -78,6 +80,17 @@ var readyPromise = new Promise((resolve, reject) => {
 var server
 var portfinder = require('portfinder')
 portfinder.basePort = port
+
+var jsonServer = require('json-server')
+var apiServer = jsonServer.create()
+var apiRouter = jsonServer.router('db.json')
+var apiMiddlewares = jsonServer.defaults()
+
+apiServer.use(apiMiddlewares)
+apiServer.use('/api',apiRouter)
+apiServer.listen(port + 1, () => {
+  console.log('JSON Server is running')
+})
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
