@@ -1,5 +1,5 @@
 // https://eslint.org/docs/user-guide/configuring
-
+/* jshint -W117 */
 module.exports = {
   root: true,
   parser: 'babel-eslint',
