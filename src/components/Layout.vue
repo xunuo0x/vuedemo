@@ -22,11 +22,22 @@
     <div class="app-foot">
       <p> © 2017 xunuo0x </p>
     </div>
+    <my-dialog ></my-dialog>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+  import Dialog from './dialog'
+  export default {
+    components: {
+      MyDialog: Dialog
+    },
+    data () {
+      return {
+        isShowDialog: false
+      }
+    }
+  }
 </script>
 
 <style>

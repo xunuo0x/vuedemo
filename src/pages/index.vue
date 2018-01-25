@@ -17,12 +17,13 @@
       <h2>最新消息</h2>
       <ul v-for="item in newsList">
         <li>
-          {{item.product}}
+          <a :href="item.url" class="new-item" >{{item.title}}</a>
         </li>
       </ul>
     </div>
   </div>
   <div class="index-right">
+    <slide-show :slides="slides" :inv="inv" @ischange="doSthOnChange"></slide-show>
     <div class="index-board-list">
       <div v-for="(item,index) in boardList" class="index-board-item" :class="[{'line-last' : index %2 !== 0},'index-board-' + item.id ]">
         <div class="index-board-item-inner">
@@ -38,17 +39,44 @@
 </div>
 </template>
 <script>
+import slideShow from '../components/slideShow'
 export default {
+  components: {
+    slideShow
+  },
   created: function () {
     this.$http.get('/api/getNewsList')
       .then((res) => {
-        console.log(res)
+        this.newsList = res.data
       }, (err) => {
         console.log(err)
       })
   },
   data () {
     return {
+      inv: 1500,
+      slides: [
+        {
+          src: require('../assets/slideShow/pic1.jpg'),
+          title: 'xxx1',
+          href: 'detail/analysis'
+        },
+        {
+          src: require('../assets/slideShow/pic2.jpg'),
+          title: 'xxx2',
+          href: 'detail/count'
+        },
+        {
+          src: require('../assets/slideShow/pic3.jpg'),
+          title: 'xxx3',
+          href: 'http://xxx.xxx.com'
+        },
+        {
+          src: require('../assets/slideShow/pic4.jpg'),
+          title: 'xxx4',
+          href: 'detail/forecast'
+        }
+      ],
       boardList: [{
         title: '开放产品',
         description: '开放产品是一款开放产品',
@@ -78,34 +106,7 @@ export default {
         saleout: false
       }
       ],
-      newsList: [{
-        'orderId': 'ddj123',
-        'product': '数据统计',
-        'version': '高级版',
-        'period': '1年',
-        'buyNum': 2,
-        'date': '2016-10-10',
-        'amount': '500元'
-      },
-      {
-        'orderId': 'yuj583',
-        'product': '流量分析',
-        'version': '户外版',
-        'period': '3个月',
-        'buyNum': 1,
-        'date': '2016-5-2',
-        'amount': '2200元'
-      },
-      {
-        'orderId': 'pmd201',
-        'product': '广告发布',
-        'version': '商铺版',
-        'period': '3年',
-        'buyNum': 12,
-        'date': '2016-8-3',
-        'amount': '7890元'
-      }
-      ],
+      newsList: [],
       productList: {
         pc: {
           title: 'PC产品',
@@ -151,6 +152,11 @@ export default {
           ]
         }
       }
+    }
+  },
+  methods: {
+    doSthOnChange (index) {
+      console.log('on change', index)
     }
   }
 }
@@ -265,7 +271,7 @@ export default {
 
 .new-item {
   display: inline-block;
-  width: 230px;
+  width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
